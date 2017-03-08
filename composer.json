@@ -1,0 +1,40 @@
+{
+    "name": "popcode/user-auth",
+    "description": "Extended user authentication functionality for Laravel",
+    "type": "package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Endre Varga",
+            "email": "endre.varga@popcode.hu"
+        }
+    ],
+    "require": {
+        "php": ">=5.6",
+        "laravel/framework": ">=5.0",
+        "illuminate/config": "^5.4",
+        "popcode/user-crud": "^0.0.10"
+    },
+    "require-dev": {
+        "fzaninotto/faker": "~1.4",
+        "mockery/mockery": "0.9.*",
+        "phpunit/phpunit": "~5.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "PopCode\\UserCrud\\": "src/UserAuth/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "": "tests/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/popkod/user-crud"
+        }
+    ],
+    "minimum-stability": "dev"
+}
