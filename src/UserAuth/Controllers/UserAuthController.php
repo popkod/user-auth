@@ -19,7 +19,7 @@ class UserAuthController extends BaseController implements UserAuthControllerInt
         } else {
             return $this->errorResponseGenerator(
                 \Request::all(),
-                ['message' => 'Hibás felhasználónév vagy jelszó'],
+                \Config::get('popcode-userauth.messages.invalid_login'),
                 'login'
             );
         }
@@ -27,6 +27,8 @@ class UserAuthController extends BaseController implements UserAuthControllerInt
 
     public function logout() {
         Auth::logout();
+
+        return $this->responseGenerator(['logout' => 'success'], 'logout');
     }
 
 
