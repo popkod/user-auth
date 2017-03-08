@@ -3,6 +3,7 @@
 namespace PopCode\UserAuth\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use PopCode\UserAuth;
 use Config;
 
 class UserAuthServiceProvider extends ServiceProvider
@@ -29,5 +30,13 @@ class UserAuthServiceProvider extends ServiceProvider
         // merge configuration
         $this->mergeConfigFrom($root . 'config/popcode-userauth.php', 'popcode-userauth');
 
+    }
+
+    public function register() {
+        $this->app->bind('UserAuth', function() {
+            return new UserAuth\Controllers\UserAuthController;
+        });
+
+        // TODO register JWT
     }
 }
