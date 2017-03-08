@@ -8,13 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserAuthController extends BaseController implements UserAuthControllerInterface
 {
-
-    /**
-     * @var \Illuminate\Database\Eloquent\Model|\PopCode\UserAuth\Models\User
-     */
-    protected $model;
-
-    public function __construct($model = null, $metaModel = null) {
+    public function __construct() {
 
     }
 

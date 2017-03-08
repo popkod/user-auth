@@ -1,6 +1,6 @@
 <?php
 
-namespace PopCode\UserCrud\Providers;
+namespace PopCode\UserAuth\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Config;
