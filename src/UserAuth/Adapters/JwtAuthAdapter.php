@@ -1,0 +1,65 @@
+<?php
+
+namespace PopCode\UserAuth\Adapters;
+
+use JWTAuth;
+use PopCode\UserAuth\Interfaces\AuthAdapterInterface;
+
+class JwtAuthAdapter implements AuthAdapterInterface
+{
+    protected $user;
+
+    protected $token;
+
+    public function __construct() {
+        $this->checkIfTokenProvided();
+    }
+
+    public function attempt($credentials, $customCredentials = []) {
+        if ($token = JWTAuth::attempt($credentials, $customCredentials)) {
+            $this->setUserObject($token);
+            return true;
+        }
+        return false;
+    }
+
+    public function user() {
+        return $this->user;
+    }
+
+    public function logout() {
+        JWTAuth::invalidate();
+    }
+
+    public function loginAs($user, $customCredentials = []) {
+        return JWTAuth::fromUser($user, $customCredentials ?: []);
+    }
+
+    public function toValidArgument($arg) {
+        return is_array($arg) ? $arg : [];
+    }
+
+
+    protected function setUserObject($token) {
+        $this->token = $token;
+        $user = JWTAuth::toUser($token);
+        if ($user) {
+            $this->user = $user;
+            $this->user->token = $token;
+        }
+    }
+
+    protected function checkIfTokenProvided() {
+        if ($token = JWTAuth::getToken()) {
+            $this->setUserObject($token);
+            return;
+        }
+
+        if ($cookieName = \Config::get('popcode-userauth.token_cookie_name')) {
+            if ($token = \Request::cookie($cookieName)) {
+                $this->setUserObject($token);
+                return;
+            }
+        }
+    }
+}

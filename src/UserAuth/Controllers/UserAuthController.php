@@ -2,9 +2,9 @@
 
 namespace PopCode\UserAuth\Controllers;
 
+use PCAuth;
 use Illuminate\Routing\Controller as BaseController;
 use PopCode\UserAuth\Interfaces\UserAuthControllerInterface;
-use Illuminate\Support\Facades\Auth;
 
 class UserAuthController extends BaseController implements UserAuthControllerInterface
 {
@@ -13,8 +13,8 @@ class UserAuthController extends BaseController implements UserAuthControllerInt
     }
 
     public function login() {
-        if (Auth::attempt(['email' => \Request::get('email'), 'password' => \Request::get('password')])) {
-            $user = Auth::user();
+        if (PCAuth::attempt(['email' => \Request::get('email'), 'password' => \Request::get('password')])) {
+            $user = PCAuth::user();
             return $this->responseGenerator($user, 'login');
         } else {
             return $this->errorResponseGenerator(
@@ -26,7 +26,7 @@ class UserAuthController extends BaseController implements UserAuthControllerInt
     }
 
     public function logout() {
-        Auth::logout();
+        PCAuth::logout();
 
         return $this->responseGenerator(['logout' => 'success'], 'logout');
     }

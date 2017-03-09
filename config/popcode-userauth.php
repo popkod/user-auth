@@ -4,10 +4,13 @@ return [
     'register_default_routes'   => false,
 
     'messages'                  => [
-        'invalid-login' => 'Invalid username or password!',
+        'invalid_login' => 'Invalid username or password!',
     ],
 
-    'provider'                  => '',
+    // basic|jwt
+    'provider'                  => 'jwt',
+
+    'token_cookie_name'         => false,
 
     'providers'                 => [
         'basic'   => [
@@ -27,6 +30,4 @@ return [
         ],
     ],
 
-    // set the above configuration to the 3rd party packages
-    'override-3rd-party-config' => true,
 ];

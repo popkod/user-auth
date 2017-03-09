@@ -2,9 +2,9 @@
 
 namespace PopCode\UserAuth\Factories;
 
-class ControllerFactory
+class AuthManagerFactory
 {
-    protected $provider;
+    protected $manager;
 
     protected $controller;
 
