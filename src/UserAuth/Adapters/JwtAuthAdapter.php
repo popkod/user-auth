@@ -24,6 +24,9 @@ class JwtAuthAdapter implements AuthAdapterInterface
     }
 
     public function user() {
+        if (!$this->user) {
+            $this->checkIfTokenProvided();
+        }
         return $this->user;
     }
 
@@ -39,16 +42,6 @@ class JwtAuthAdapter implements AuthAdapterInterface
         return is_array($arg) ? $arg : [];
     }
 
-
-    protected function setUserObject($token) {
-        $this->token = $token;
-        $user = JWTAuth::toUser($token);
-        if ($user) {
-            $this->user = $user;
-            $this->user->token = $token;
-        }
-    }
-
     protected function checkIfTokenProvided() {
         if ($token = JWTAuth::getToken()) {
             $this->setUserObject($token);
@@ -60,6 +53,17 @@ class JwtAuthAdapter implements AuthAdapterInterface
                 $this->setUserObject($token);
                 return;
             }
+        }
+    }
+
+
+    protected function setUserObject($token) {
+        $this->token = $token;
+        $user = JWTAuth::toUser($token);
+
+        if ($user) {
+            $this->user = $user;
+            $this->user->token = $token;
         }
     }
 }

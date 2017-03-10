@@ -58,6 +58,11 @@ class AuthManager extends BaseAuthManager
         $this->adapter->logout();
     }
 
+    public function authenticate() {
+        return (bool)$this->user();
+    }
+
+
     /**
      * @param $user
      * @param bool|array $additionalData
