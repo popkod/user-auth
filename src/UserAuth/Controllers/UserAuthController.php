@@ -39,13 +39,18 @@ class UserAuthController extends BaseController implements UserAuthControllerInt
     }
 
     public function fbCallback(SocialAccountService $service) {
+        if (\Request::get('error')) {
+            return $this->errorResponseGenerator('', \Request::all());
+        };
+
         $providerUser = Socialite::driver('facebook')->stateless()->user();
+
 
         $user = $service->createOrGetUser($providerUser);
 
-        auth()->login($user);
+        PCAuth::loginAs($user);
 
-        return redirect()->to('/home');
+        return $this->responseGenerator(PCAuth::user(), 'fb-login');
     }
 
     protected function responseGenerator($responseData, $type = null) {

@@ -35,7 +35,9 @@ class JwtAuthAdapter implements AuthAdapterInterface
     }
 
     public function loginAs($user, $customCredentials = []) {
-        return JWTAuth::fromUser($user, $customCredentials ?: []);
+        $this->user = $user;
+        $this->setUserObject(JWTAuth::fromUser($user, $customCredentials ?: []));
+        return null;
     }
 
     public function toValidArgument($arg) {
