@@ -5,25 +5,10 @@ namespace PopCode\UserAuth\Middlewares;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
 use PCAuth;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 
 class Authenticate
 {
-    /**
-     * The authentication factory instance.
-     *
-     * @var \PCAuth
-     */
-    protected $auth;
-
-    /**
-     * Create a new middleware instance.
-     *
-     * @param \PCAuth $auth
-     */
-    public function __construct(PCAuth $auth)
-    {
-        $this->auth = $auth;
-    }
 
     /**
      * Handle an incoming request.
@@ -37,7 +22,11 @@ class Authenticate
      */
     public function handle($request, Closure $next, ...$guards)
     {
-        $this->authenticate($guards);
+        try {
+            $this->authenticate($guards);
+        } catch (TokenBlacklistedException $e) {
+            throw new AuthenticationException('Unauthenticated.', $guards);
+        }
 
         return $next($request);
     }
@@ -52,13 +41,15 @@ class Authenticate
      */
     protected function authenticate(array $guards)
     {
-        if (empty($guards)) {
-            return $this->auth->authenticate();
+        if (empty($guards) && PCAuth::authenticate()) {
+            return;
         }
 
         foreach ($guards as $guard) {
-            if ($this->auth->guard($guard)->check()) {
-                return $this->auth->shouldUse($guard);
+            if (PCAuth::guard($guard)->check()) {
+                if (PCAuth::shouldUse($guard)) {
+                    return;
+                }
             }
         }
 

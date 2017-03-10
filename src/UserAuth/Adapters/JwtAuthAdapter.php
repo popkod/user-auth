@@ -31,7 +31,7 @@ class JwtAuthAdapter implements AuthAdapterInterface
     }
 
     public function logout() {
-        JWTAuth::invalidate();
+        JWTAuth::invalidate($this->token);
     }
 
     public function loginAs($user, $customCredentials = []) {
