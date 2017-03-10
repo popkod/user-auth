@@ -4,6 +4,8 @@ namespace PopCode\UserAuth\Providers;
 
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\SocialiteServiceProvider;
 use PopCode\UserAuth\Controllers\UserAuthController;
 use PopCode\UserAuth\Managers\AuthManager;
 use Tymon\JWTAuth\Providers\JWTAuthServiceProvider;
@@ -26,6 +28,17 @@ class UserAuthServiceProvider extends ServiceProvider
             ],
             'config'
         );
+
+        $datePrefix = \Carbon\Carbon::now()->format('Y_m_d_His');
+
+        if (!class_exists('CreateSocialAccountsTable')) {
+            $this->publishes(
+                [
+                    $root . 'migrations/2017_03_10_144855_create_social_accounts_table.php' => database_path('migrations/' . $datePrefix . '_create_social_accounts_table.php'),
+                ],
+                'migrations'
+            );
+        }
 
         if (Config::get('popcode-userauth.register_default_routes')) {
             // register routes
@@ -58,6 +71,10 @@ class UserAuthServiceProvider extends ServiceProvider
         $this->app->register(JWTAuthServiceProvider::class);
         $loader->alias('JWTAuth',    JWTAuth::class);
         $loader->alias('JWTFactory', JWTFactory::class);
+
+        // Socialite
+        $this->app->register(SocialiteServiceProvider::class);
+        $loader->alias('Socialite', Socialite::class);
     }
 
     /**

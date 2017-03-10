@@ -1,10 +1,25 @@
 <?php
-
-Illuminate\Support\Facades\Route::post(
+/**
+ * API routes
+ */
+Route::post(
     '/api/login',
     '\\PopCode\\UserAuth\\Controllers\\UserAuthController@login'
 );
-Illuminate\Support\Facades\Route::any(
+Route::any(
     '/api/logout',
     '\\PopCode\\UserAuth\\Controllers\\UserAuthController@logout'
+);
+
+/**
+ * Social routes
+ */
+Route::get(
+    '/login/fb',
+    '\\PopCode\\UserAuth\\Controllers\\UserAuthController@fbRedirect'
+);
+
+Route::get(
+    '/login/fb-callback',
+    '\\PopCode\\UserAuth\\Controllers\\UserAuthController@fbCallback'
 );

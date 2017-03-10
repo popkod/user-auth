@@ -3,6 +3,8 @@
 namespace PopCode\UserAuth\Controllers;
 
 use PCAuth;
+use Socialite;
+use PopCode\UserAuth\Services\SocialAccountService;
 use Illuminate\Routing\Controller as BaseController;
 use PopCode\UserAuth\Interfaces\UserAuthControllerInterface;
 
@@ -31,6 +33,20 @@ class UserAuthController extends BaseController implements UserAuthControllerInt
         return $this->responseGenerator(['logout' => 'success'], 'logout');
     }
 
+
+    public function fbRedirect() {
+        return Socialite::driver('facebook')->stateless()->redirect();
+    }
+
+    public function fbCallback(SocialAccountService $service) {
+        $providerUser = Socialite::driver('facebook')->stateless()->user();
+
+        $user = $service->createOrGetUser($providerUser);
+
+        auth()->login($user);
+
+        return redirect()->to('/home');
+    }
 
     protected function responseGenerator($responseData, $type = null) {
         if (\Request::ajax() || \Request::wantsJson()) {
