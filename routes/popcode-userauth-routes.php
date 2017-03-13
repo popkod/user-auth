@@ -14,7 +14,7 @@ Route::any(
 Route::get(
     '/api/me',
     '\\PopCode\\UserAuth\\Controllers\\UserAuthController@getCurrent'
-);
+)->middleware('pcauth');
 
 /**
  * Social routes
