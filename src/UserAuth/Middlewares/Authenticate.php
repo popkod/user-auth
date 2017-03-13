@@ -25,7 +25,7 @@ class Authenticate
         try {
             $this->authenticate($guards);
         } catch (TokenBlacklistedException $e) {
-            throw new AuthenticationException('Unauthenticated.', $guards);
+            return response('', 401);
         }
 
         return $next($request);

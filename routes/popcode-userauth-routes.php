@@ -12,7 +12,7 @@ Route::any(
 );
 
 Route::get(
-    '/api/me',
+    '/api/users/me',
     '\\PopCode\\UserAuth\\Controllers\\UserAuthController@getCurrent'
 )->middleware('pcauth');
 
