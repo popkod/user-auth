@@ -26,6 +26,8 @@ class Authenticate
             $this->authenticate($guards);
         } catch (TokenBlacklistedException $e) {
             return response('', 401);
+        } catch (AuthenticationException $e) {
+            return response('', 401);
         }
 
         return $next($request);
