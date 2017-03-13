@@ -33,6 +33,11 @@ class UserAuthController extends BaseController implements UserAuthControllerInt
         return $this->responseGenerator(['logout' => 'success'], 'logout');
     }
 
+    public function getCurrent() {
+        $user = PCAuth::user();
+        return $this->responseGenerator($user, 'me');
+    }
+
 
     public function fbRedirect() {
         return Socialite::driver('facebook')->stateless()->redirect();

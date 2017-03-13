@@ -11,6 +11,11 @@ Route::any(
     '\\PopCode\\UserAuth\\Controllers\\UserAuthController@logout'
 );
 
+Route::get(
+    '/api/me',
+    '\\PopCode\\UserAuth\\Controllers\\UserAuthController@getCurrent'
+);
+
 /**
  * Social routes
  */
