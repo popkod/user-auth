@@ -8,7 +8,7 @@ use PopCode\UserAuth\Services\SocialAccountService;
 use Illuminate\Routing\Controller as BaseController;
 use PopCode\UserAuth\Interfaces\UserAuthControllerInterface;
 
-class UserAuthController extends BaseController implements UserAuthControllerInterface
+class PCUserAuthController extends BaseController implements UserAuthControllerInterface
 {
     public function __construct() {
 
