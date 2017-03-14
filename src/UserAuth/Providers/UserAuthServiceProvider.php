@@ -6,7 +6,7 @@ use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\SocialiteServiceProvider;
-use PopCode\UserAuth\Controllers\PCUserAuthController as UserAuthController;
+use PopCode\UserAuth\Controllers\UserAuthController;
 use PopCode\UserAuth\Managers\AuthManager;
 use Tymon\JWTAuth\Providers\JWTAuthServiceProvider;
 use Tymon\JWTAuth\Facades\JWTAuth;

@@ -3,6 +3,7 @@
 namespace PopCode\UserAuth\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use PopCode\UserAuth\Managers\AuthManager;
 
 class AuthFacade extends Facade
 {
