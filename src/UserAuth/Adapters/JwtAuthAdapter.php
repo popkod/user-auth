@@ -31,6 +31,7 @@ class JwtAuthAdapter implements AuthAdapterInterface
     }
 
     public function logout() {
+        \Session::remove('jwt-token');
         JWTAuth::invalidate($this->token);
     }
 
@@ -46,6 +47,11 @@ class JwtAuthAdapter implements AuthAdapterInterface
 
     protected function checkIfTokenProvided() {
         if ($token = JWTAuth::getToken()) {
+            $this->setUserObject($token);
+            return;
+        }
+
+        if ($token = \Session::get('jwt-token')) {
             $this->setUserObject($token);
             return;
         }
@@ -66,6 +72,7 @@ class JwtAuthAdapter implements AuthAdapterInterface
         if ($user) {
             $this->user = $user;
             $this->user->token = $token;
+            \Session::put('jwt-token', $user->token);
         }
     }
 }

@@ -25,9 +25,9 @@ class Authenticate
         try {
             $this->authenticate($guards);
         } catch (TokenBlacklistedException $e) {
-            return response('', 401);
+            return $this->errorResponseGenerator($guards);
         } catch (AuthenticationException $e) {
-            return response('', 401);
+            return $this->errorResponseGenerator($guards);
         }
 
         return $next($request);
@@ -43,18 +43,14 @@ class Authenticate
      */
     protected function authenticate(array $guards)
     {
-        if (empty($guards) && PCAuth::authenticate()) {
+        if (PCAuth::authenticate()) {
             return;
         }
 
-        foreach ($guards as $guard) {
-            if (PCAuth::guard($guard)->check()) {
-                if (PCAuth::shouldUse($guard)) {
-                    return;
-                }
-            }
-        }
-
         throw new AuthenticationException('Unauthenticated.', $guards);
+    }
+
+    protected function errorResponseGenerator($props) {
+        return response('', 401);
     }
 }
