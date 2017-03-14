@@ -28,3 +28,5 @@ Route::get(
     '/login/fb-callback',
     '\\PopCode\\UserAuth\\Controllers\\UserAuthController@fbCallback'
 );
+
+Route::get('/refresh-token', 'PopCode\\UserAuth\\Controllers\\UserAuthController@refreshToken');

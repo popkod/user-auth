@@ -58,6 +58,24 @@ class UserAuthController extends BaseController implements UserAuthControllerInt
         return $this->responseGenerator(PCAuth::user(), 'fb-login');
     }
 
+    public function refreshToken() {
+        if (PCAuth::refreshToken()) {
+            if (\Request::ajax() || \Request::wantsJson()) {
+                return $this->getCurrent();
+            }
+            if (\Request::get('redirect-after')) {
+                return redirect(\Request::get('redirect-after'));
+            }
+            return $this->responseGenerator($this->getCurrent());
+        }
+
+        if (!\Request::ajax() && !\Request::wantsJson() && $redirectTo = \Config::get('popcode-userauth.url.login')) {
+            return redirect($redirectTo);
+        }
+
+        return $this->errorResponseGenerator([], [], null, 401);
+    }
+
     protected function responseGenerator($responseData, $type = null) {
         if (\Request::ajax() || \Request::wantsJson()) {
             return response()->json($responseData);

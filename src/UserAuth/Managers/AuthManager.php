@@ -62,6 +62,13 @@ class AuthManager extends BaseAuthManager
         return (bool)$this->user();
     }
 
+    public function refreshToken() {
+        if (method_exists($this->adapter, 'refreshToken')) {
+            return $this->adapter->refreshToken();
+        }
+        return false;
+    }
+
 
     /**
      * @param $user

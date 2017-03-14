@@ -12,6 +12,11 @@ return [
 
     'token_cookie_name'         => false,
 
+    'url'                       => [
+        'refresh-token'         => '/refresh-token',
+        'login'                 => '/admin/login',
+    ],
+
     'providers'                 => [
         'basic'   => [
             'class'   => PopCode\UserAuth\Controllers\UserAuthController::class,

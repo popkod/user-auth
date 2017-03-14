@@ -9,4 +9,6 @@ interface UserAuthControllerInterface
     public function login();
 
     public function logout();
+
+    public function refreshToken();
 }

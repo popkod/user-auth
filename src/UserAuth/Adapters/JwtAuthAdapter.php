@@ -3,6 +3,8 @@
 namespace PopCode\UserAuth\Adapters;
 
 use JWTAuth;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use PopCode\UserAuth\Interfaces\AuthAdapterInterface;
 
 class JwtAuthAdapter implements AuthAdapterInterface
@@ -12,7 +14,11 @@ class JwtAuthAdapter implements AuthAdapterInterface
     protected $token;
 
     public function __construct() {
-        $this->checkIfTokenProvided();
+        try {
+            $this->checkIfTokenProvided();
+        } catch (TokenExpiredException $e) {
+
+        }
     }
 
     public function attempt($credentials, $customCredentials = []) {
@@ -41,6 +47,16 @@ class JwtAuthAdapter implements AuthAdapterInterface
         return null;
     }
 
+    public function refreshToken() {
+        try {
+            $token = JWTAuth::refresh($this->token);
+            if ($token) {
+                return $this->setUserObject($token);
+            }
+        } catch (TokenBlacklistedException $e) {}
+        return false;
+    }
+
     public function toValidArgument($arg) {
         return is_array($arg) ? $arg : [];
     }
@@ -67,12 +83,18 @@ class JwtAuthAdapter implements AuthAdapterInterface
 
     protected function setUserObject($token) {
         $this->token = $token;
-        $user = JWTAuth::toUser($token);
+        try {
+            $user = JWTAuth::toUser($token);
 
-        if ($user) {
-            $this->user = $user;
-            $this->user->token = $token;
-            \Session::put('jwt-token', $user->token);
+            if ($user) {
+                $this->user = $user;
+                $this->user->token = $token;
+                \Session::put('jwt-token', $user->token);
+                return true;
+            }
+        } catch (TokenExpiredException $e) {
+        } catch (TokenBlacklistedException $e) {
         }
+        return false;
     }
 }

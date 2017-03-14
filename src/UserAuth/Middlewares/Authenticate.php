@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Auth\AuthenticationException;
 use PCAuth;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 class Authenticate
 {
@@ -25,9 +26,11 @@ class Authenticate
         try {
             $this->authenticate($guards);
         } catch (TokenBlacklistedException $e) {
-            return $this->errorResponseGenerator($guards);
+            return $this->errorResponseGenerator(false, $guards);
         } catch (AuthenticationException $e) {
-            return $this->errorResponseGenerator($guards);
+            return $this->errorResponseGenerator(false, $guards);
+        } catch (TokenExpiredException $e) {
+            return $this->errorResponseGenerator(true, $guards);
         }
 
         return $next($request);
@@ -50,7 +53,14 @@ class Authenticate
         throw new AuthenticationException('Unauthenticated.', $guards);
     }
 
-    protected function errorResponseGenerator($props) {
+    protected function errorResponseGenerator($expired, $props) {
+        if ($expired) {
+            if (\Request::ajax() || \Request::wantsJson()) {
+                return response()->json(['expired' => true]);
+            } elseif ($redirectTo = \Config::get('popcode-userauth.url.refresh-token')) {
+                return redirect($redirectTo);
+            }
+        }
         return response('', 401);
     }
 }
