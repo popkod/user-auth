@@ -15,7 +15,8 @@
         "illuminate/config": "^5.4",
         "popcode/user-crud": ">=0.0.16",
         "tymon/jwt-auth": "^0.5.10",
-        "laravel/socialite": "^3.0"
+        "laravel/socialite": "^3.0",
+        "doctrine/dbal": "2.5.12"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
