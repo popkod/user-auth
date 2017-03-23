@@ -7,6 +7,8 @@ use Laravel\Socialite\Contracts\User as ProviderUser;
 
 class SocialAccountService
 {
+    protected $existed = false;
+
     public function createOrGetUser(ProviderUser $providerUser) {
         $userModel = \Config::get('popcode-usercrud.model');
         /* @var \PopCode\UserAuth\Models\User $userModel */
@@ -16,8 +18,10 @@ class SocialAccountService
             ->first();
 
         if ($account) {
+            $this->existed = true;
             return $account->user;
         } else {
+            $this->existed = false;
 
             $account = new SocialAccount([
                 'provider_user_id' => $providerUser->getId(),
@@ -32,6 +36,8 @@ class SocialAccountService
                     'name' => $providerUser->getName(),
                 ]);
                 $user->save();
+            } else {
+                $this->existed = true;
             }
 
             $account->user()->associate($user);
@@ -39,5 +45,9 @@ class SocialAccountService
 
             return $user;
         }
+    }
+
+    public function isNew() {
+        return !$this->existed;
     }
 }
