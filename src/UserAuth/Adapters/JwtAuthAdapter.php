@@ -88,7 +88,7 @@ class JwtAuthAdapter implements AuthAdapterInterface
 
             if ($user) {
                 $this->user = $user;
-                $this->user->token = $token;
+                $this->user->token = (string)$token;
                 \Session::put('jwt-token', $user->token);
                 return true;
             }

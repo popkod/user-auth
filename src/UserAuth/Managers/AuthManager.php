@@ -50,6 +50,9 @@ class AuthManager extends BaseAuthManager
         return $this->adapter->attempt($credentials, $additionalData);
     }
 
+    /**
+     * @return \App\User|\PopCode\UserAuth\Models\User
+     */
     public function user() {
         return $this->adapter->user();
     }

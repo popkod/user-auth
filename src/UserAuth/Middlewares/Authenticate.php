@@ -61,6 +61,12 @@ class Authenticate
                 return redirect($redirectTo);
             }
         }
-        return response('', 401);
+        if (\Request::ajax() || \Request::wantsJson()) {
+            return response('', 401);
+        }
+        if ($redirectTo = \Config::get('popcode-userauth.url.login')) {
+            return redirect($redirectTo);
+        }
+        return redirect('/');
     }
 }
