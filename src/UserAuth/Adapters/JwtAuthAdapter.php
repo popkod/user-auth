@@ -83,17 +83,13 @@ class JwtAuthAdapter implements AuthAdapterInterface
 
     protected function setUserObject($token) {
         $this->token = $token;
-        try {
-            $user = JWTAuth::toUser($token);
+        $user = JWTAuth::toUser($token);
 
-            if ($user) {
-                $this->user = $user;
-                $this->user->token = (string)$token;
-                \Session::put('jwt-token', $user->token);
-                return true;
-            }
-        } catch (TokenExpiredException $e) {
-        } catch (TokenBlacklistedException $e) {
+        if ($user) {
+            $this->user = $user;
+            $this->user->token = (string)$token;
+            \Session::put('jwt-token', $user->token);
+            return true;
         }
         return false;
     }
