@@ -83,4 +83,11 @@ class AuthManager extends BaseAuthManager
         $additionalData = $this->adapter->toValidArgument($additionalData);
         return $this->adapter->loginAs($user, $additionalData);
     }
+
+    public function getException() {
+        if (method_exists($this->adapter, 'getException')) {
+            return $this->adapter->getException();
+        }
+        return null;
+    }
 }

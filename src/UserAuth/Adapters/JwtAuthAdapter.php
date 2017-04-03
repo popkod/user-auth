@@ -13,6 +13,8 @@ class JwtAuthAdapter implements AuthAdapterInterface
 
     protected $token;
 
+    protected $exception;
+
     public function __construct() {
         try {
             $this->checkIfTokenProvided();
@@ -83,14 +85,24 @@ class JwtAuthAdapter implements AuthAdapterInterface
 
     protected function setUserObject($token) {
         $this->token = $token;
-        $user = JWTAuth::toUser($token);
+        try {
+            $user = JWTAuth::toUser($token);
 
-        if ($user) {
-            $this->user = $user;
-            $this->user->token = (string)$token;
-            \Session::put('jwt-token', $user->token);
-            return true;
+            if ($user) {
+                $this->user = $user;
+                $this->user->token = (string)$token;
+                \Session::put('jwt-token', $user->token);
+                return true;
+            }
+        } catch (TokenExpiredException $e) {
+            $this->exception = $e;
+        } catch (TokenBlacklistedException $e) {
+            $this->exception = $e;
         }
         return false;
+    }
+
+    public function getException() {
+        return $this->exception;
     }
 }
