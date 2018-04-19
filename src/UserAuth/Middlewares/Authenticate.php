@@ -65,7 +65,7 @@ class Authenticate
             return response('', 401);
         }
         if ($redirectTo = \Config::get('popcode-userauth.url.login')) {
-            return redirect($redirectTo);
+            return redirect($redirectTo, 303);
         }
         return redirect('/');
     }
